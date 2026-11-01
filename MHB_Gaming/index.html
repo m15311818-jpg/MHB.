@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090b18"><title>MHB Gaming</title>
+<style>
+:root{--bg:#090b18;--panel:#12172a;--line:#27304d;--purple:#8b5cf6;--cyan:#22d3ee;--muted:#aab2cc}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0%,#24204a 0,transparent 35%),var(--bg);color:#f7f7ff;font-family:Tahoma,Arial,sans-serif;min-height:100vh}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px max(5%,calc((100% - 1100px)/2));border-bottom:1px solid #ffffff18}
+.logo{font-weight:900;font-size:28px;letter-spacing:2px;color:#fff}.logo span{color:var(--cyan)}
+main{max-width:1000px;margin:36px auto;padding:0 18px}.hero{text-align:center;padding:32px 10px}.hero h1{font-size:clamp(32px,6vw,58px);margin:8px 0;background:linear-gradient(90deg,#fff,#b9a2ff,#56e7f5);background-clip:text;color:transparent}.hero p{color:var(--muted)}
+.card{background:linear-gradient(145deg,#171d35,#101426);border:1px solid var(--line);border-radius:22px;padding:24px;box-shadow:0 20px 60px #0005;margin:18px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
+label{display:block;color:#dce2ff;margin:12px 0 7px}input,select{width:100%;padding:14px;border-radius:12px;border:1px solid #394363;background:#090e20;color:white;font-size:16px;outline:none}
+button{border:0;border-radius:13px;padding:14px 20px;background:linear-gradient(90deg,var(--purple),#536dff);color:white;font-weight:bold;font-size:16px;cursor:pointer;margin-top:14px}button.secondary{background:#252e4c;border:1px solid #465477}button:disabled{opacity:.5;cursor:not-allowed}
+.tile{padding:24px;border:1px solid #344064;border-radius:18px;background:#0c1227;cursor:pointer;text-align:center;transition:.2s}.tile:hover,.tile.active{border-color:var(--cyan);transform:translateY(-2px);box-shadow:0 0 25px #22d3ee20}.tile .emoji{font-size:38px}.muted{color:var(--muted)}.hidden{display:none!important}.status{padding:14px;border-radius:12px;background:#0a2030;border:1px solid #1d5360;color:#b8f5ff;margin-top:14px}.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}.row>*{flex:1}.pill{display:inline-block;background:#25204b;color:#c9b8ff;padding:6px 12px;border-radius:30px;font-size:13px}
+footer{text-align:center;color:#68718e;padding:30px}
+@media(max-width:600px){main{margin:16px auto}.card{padding:18px}.hero{padding:20px 5px}}
+</style></head>
+<body>
+<header><div class="logo">MHB<span>.</span></div><span class="pill">GAMING ARENA</span></header>
+<main>
+<section class="hero"><div class="pill">WELCOME TO MHB</div><h1>اللعب يبدأ من هنا</h1><p>اختر لعبتك، تحدَّ أصدقاءك، واجمع النقاط.</p></section>
+<section class="card" id="register">
+<h2>إنشاء حساب لاعب</h2><p class="muted">أدخل بياناتك للمتابعة. لا تدخل بيانات دفع أو كلمات مرور هنا.</p>
+<label>الاسم الرباعي</label><input id="fullName" autocomplete="name" placeholder="اكتب اسمك الرباعي">
+<label>رقم الهاتف</label><input id="phone" inputmode="tel" autocomplete="tel" placeholder="01xxxxxxxxx">
+<button id="registerBtn">متابعة</button><div id="registerMsg" class="muted"></div>
+</section>
+<section class="card hidden" id="waiting"><h2>مرحباً بك في MHB</h2><p>تم تسجيل طلبك. انتظر موافقة إدارة المنصة.</p><div class="status" id="approvalStatus">حالة الحساب: قيد المراجعة</div><button class="secondary" id="checkApproval">تحديث الحالة</button></section>
+<section class="card hidden" id="lobby"><div class="row"><div><h2>اختر لعبتك</h2><p class="muted">رصيدك الافتراضي: <b id="points">100</b> نقطة</p></div><span class="pill">PLAYER LOBBY</span></div>
+<div class="grid"><div class="tile" data-game="domino"><div class="emoji">🁣</div><h3>الدومينو</h3><p class="muted">تحديات فردية</p></div><div class="tile" data-game="cards"><div class="emoji">🂡</div><h3>الكوتشينة</h3><p class="muted">ألعاب ورق</p></div></div>
+<div id="modeBox" class="hidden"><h3>طريقة اللعب</h3><div class="grid"><div class="tile" data-mode="bot"><h3>🤖 ضد الروبوت</h3><p class="muted">العب ضد الكمبيوتر</p></div><div class="tile" data-mode="person"><h3>👥 ضد لاعب</h3><p class="muted">اطلب مباراة مع لاعب آخر</p></div></div></div>
+<div id="queueBox" class="hidden"><label>اسم اللعبة</label><input id="gameName" disabled><label>نوع المنافسة</label><input id="modeName" disabled><label id="opponentLabel" class="hidden">كود اللاعب الذي تريد تحديه (اختياري)</label><input id="opponent" class="hidden" placeholder="أدخل كود اللاعب"><button id="startBtn">إنشاء طلب مباراة</button><div id="gameMsg" class="status hidden"></div></div>
+</section>
+<section class="card hidden" id="match"><h2>المباراة</h2><p id="matchText" class="muted"></p><p>هذه نسخة تأسيسية لإدارة طلبات اللعب والنقاط. منطق اللعب الفعلي للدومينو والكوتشينة يُضاف في مرحلة مستقلة.</p><button class="secondary" onclick="location.reload()">العودة للرئيسية</button></section>
+</main><footer>© MHB Gaming — تجربة ألعاب بنقاط افتراضية</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL="https://ubqrdtqrhwmbyotmckpi.supabase.co";
+const SUPABASE_ANON_KEY="sb_publishable_ZgBUZSj9a1GGXBkY8YuAuw_0VThuNk0";
+const configured=!SUPABASE_URL.startsWith("PASTE_")&&!SUPABASE_ANON_KEY.startsWith("PASTE_");
+const $=id=>document.getElementById(id);let db=null,user=null,selectedGame="",selectedMode="";
+if(configured) db=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+function show(id){["register","waiting","lobby","match"].forEach(x=>$(x).classList.toggle("hidden",x!==id))}
+$("registerBtn").onclick=async()=>{
+ const name=$("fullName").value.trim(),phone=$("phone").value.trim();
+ if(name.split(/\s+/).length<4||!/^[+0-9()\-\s]{8,20}$/.test(phone)){ $("registerMsg").textContent="يرجى إدخال الاسم الرباعي ورقم هاتف صحيح.";return;}
+ if(!db){$("registerMsg").textContent="يجب أولاً إعداد Supabase ووضع بيانات المشروع في الكود كما هو موضح في README.";return;}
+ $("registerBtn").disabled=true;
+ try{
+  const {data:auth,error:ae}=await db.auth.signInAnonymously();if(ae)throw ae;user=auth.user;
+  const {error}=await db.from("players").upsert({id:user.id,full_name:name,phone:phone,status:"pending"},{onConflict:"id"});if(error)throw error;
+  localStorage.setItem("mhb_player",user.id);show("waiting");watchApproval();
+ }catch(e){$("registerMsg").textContent="تعذر التسجيل: "+e.message;$("registerBtn").disabled=false;}
+};
+async function loadPlayer(){if(!db)return;let {data:{user:u}}=await db.auth.getUser();user=u;if(!user){const old=localStorage.getItem("mhb_player");if(old){const {data}=await db.auth.signInAnonymously();user=data?.user;}}if(user){const {data}=await db.from("players").select("*").eq("id",user.id).maybeSingle();if(data){$("fullName").value=data.full_name;$("phone").value=data.phone;if(data.status==="approved"){show("lobby");$("points").textContent=data.points;}else show("waiting");watchApproval();}}}
+function watchApproval(){if(!db||!user)return;db.channel("player-"+user.id).on("postgres_changes",{event:"UPDATE",schema:"public",table:"players",filter:"id=eq."+user.id},payload=>{if(payload.new.status==="approved"){show("lobby");$("points").textContent=payload.new.points;}else $("approvalStatus").textContent="حالة الحساب: "+payload.new.status}).subscribe();}
+$("checkApproval").onclick=async()=>{if(!db||!user)return;const {data}=await db.from("players").select("status,points").eq("id",user.id).single();if(data.status==="approved"){show("lobby");$("points").textContent=data.points;}else $("approvalStatus").textContent="حالة الحساب: قيد المراجعة";};
+document.querySelectorAll("[data-game]").forEach(el=>el.onclick=()=>{selectedGame=el.dataset.game;document.querySelectorAll("[data-game]").forEach(x=>x.classList.remove("active"));el.classList.add("active");$("modeBox").classList.remove("hidden");$("queueBox").classList.add("hidden");});
+document.querySelectorAll("[data-mode]").forEach(el=>el.onclick=()=>{selectedMode=el.dataset.mode;document.querySelectorAll("[data-mode]").forEach(x=>x.classList.remove("active"));el.classList.add("active");$("gameName").value=selectedGame==="domino"?"الدومينو":"الكوتشينة";$("modeName").value=selectedMode==="bot"?"ضد الروبوت":"ضد لاعب";$("opponent").classList.toggle("hidden",selectedMode!=="person");$("opponentLabel").classList.toggle("hidden",selectedMode!=="person");$("queueBox").classList.remove("hidden");});
+$("startBtn").onclick=async()=>{if(!db||!user)return;const msg=$("gameMsg");msg.classList.remove("hidden");msg.textContent="جارٍ إرسال طلب المباراة...";try{const {data,error}=await db.from("match_requests").insert({player_id:user.id,game:selectedGame,mode:selectedMode,opponent_code:$("opponent").value.trim()||null}).select().single();if(error)throw error;msg.textContent="تم إرسال الطلب بنجاح. كود الطلب: "+data.id+" — انتظر ربط المباراة من الإدارة.";}catch(e){msg.textContent="تعذر إنشاء الطلب: "+e.message;}};
+if(configured)loadPlayer();else $("registerMsg").textContent="للتشغيل: أنشئ مشروع Supabase، نفّذ schema.sql، ثم أضف رابط المشروع ومفتاح anon هنا.";
+</script></body></html>
